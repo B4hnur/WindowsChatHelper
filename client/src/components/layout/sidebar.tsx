@@ -9,13 +9,15 @@ import {
   CreditCard,
   BarChart3,
   Settings,
-  Store
+  Store,
+  Folder
 } from "lucide-react";
 
 const navigation = [
   { name: "İdarə Paneli", href: "/", icon: LayoutDashboard },
   { name: "Satış", href: "/sales", icon: ShoppingCart },
   { name: "Anbar", href: "/inventory", icon: Package },
+  { name: "Kateqoriyalar", href: "/categories", icon: Folder },
   { name: "Müştərilər", href: "/customers", icon: Users },
   { name: "Tədarükçülər", href: "/suppliers", icon: Truck },
   { name: "Nisyə/Kredit", href: "/credit", icon: CreditCard },

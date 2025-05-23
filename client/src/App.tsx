@@ -15,6 +15,7 @@ import Suppliers from "@/pages/suppliers";
 import Credit from "@/pages/credit";
 import Reports from "@/pages/reports";
 import Settings from "@/pages/settings";
+import Categories from "@/pages/categories";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <ProtectedRoute path="/inventory" component={Inventory} />
       <ProtectedRoute path="/customers" component={Customers} />
       <ProtectedRoute path="/suppliers" component={Suppliers} />
+      <ProtectedRoute path="/categories" component={Categories} />
       <ProtectedRoute path="/credit" component={Credit} />
       <ProtectedRoute path="/reports" component={Reports} />
       <ProtectedRoute path="/settings" component={Settings} />
