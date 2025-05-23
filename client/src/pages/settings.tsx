@@ -408,11 +408,8 @@ export default function Settings() {
                         <p className="text-sm text-gray-500">Sistem bildirişlərini aktivləşdir</p>
                       </div>
                       <Switch
-                        checked={systemSettings.notifications}
-                        onCheckedChange={(checked) => setSystemSettings(prev => ({
-                          ...prev,
-                          notifications: checked
-                        }))}
+                        checked={storeSettings?.notifications || true}
+                        onCheckedChange={(checked) => handleStoreSettingsSubmit({ notifications: checked })}
                       />
                     </div>
                     <div className="flex items-center justify-between">
@@ -421,17 +418,14 @@ export default function Settings() {
                         <p className="text-sm text-gray-500">Gündəlik avtomatik yedəkləmə</p>
                       </div>
                       <Switch
-                        checked={systemSettings.autoBackup}
-                        onCheckedChange={(checked) => setSystemSettings(prev => ({
-                          ...prev,
-                          autoBackup: checked
-                        }))}
+                        checked={storeSettings?.autoBackup || true}
+                        onCheckedChange={(checked) => handleStoreSettingsSubmit({ autoBackup: checked })}
                       />
                     </div>
                     <div>
                       <Label htmlFor="theme">Tema</Label>
-                      <Select value={systemSettings.theme} onValueChange={(value) => 
-                        setSystemSettings(prev => ({ ...prev, theme: value }))
+                      <Select value={storeSettings?.theme || "light"} onValueChange={(value) => 
+                        handleStoreSettingsSubmit({ theme: value })
                       }>
                         <SelectTrigger className="mt-1">
                           <SelectValue />
@@ -451,9 +445,15 @@ export default function Settings() {
                     <CardTitle>Tənzimləmələri Yadda Saxla</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Button onClick={saveSystemSettings} className="w-full">
+                    <Button 
+                      onClick={() => toast({
+                        title: "Məlumat",
+                        description: "Tənzimləmələr avtomatik yadda saxlanır",
+                      })} 
+                      className="w-full"
+                    >
                       <Save className="mr-2 h-4 w-4" />
-                      Tənzimləmələri Yadda Saxla
+                      Tənzimləmələr Avtomatik Saxlanır
                     </Button>
                   </CardContent>
                 </Card>
@@ -712,8 +712,8 @@ export default function Settings() {
                   <CardContent className="space-y-4">
                     <div>
                       <Label htmlFor="receiptTemplate">Çek Şablonu</Label>
-                      <Select value={systemSettings.receiptTemplate} onValueChange={(value) => 
-                        setSystemSettings(prev => ({ ...prev, receiptTemplate: value }))
+                      <Select value={storeSettings?.receiptTemplate || "standard"} onValueChange={(value) => 
+                        handleStoreSettingsSubmit({ receiptTemplate: value })
                       }>
                         <SelectTrigger className="mt-1">
                           <SelectValue />
@@ -756,9 +756,9 @@ export default function Settings() {
                   <CardContent>
                     <div className="bg-white border-2 border-dashed border-gray-300 p-4 font-mono text-xs">
                       <div className="text-center mb-4">
-                        <div className="font-bold">{systemSettings.storeName}</div>
-                        <div>{systemSettings.storeAddress}</div>
-                        <div>{systemSettings.storePhone}</div>
+                        <div className="font-bold">{storeSettings?.storeName || "Mağaza Adı"}</div>
+                        <div>{storeSettings?.storeAddress || "Mağaza Ünvanı"}</div>
+                        <div>{storeSettings?.storePhone || "Telefon Nömrəsi"}</div>
                       </div>
                       <div className="border-b border-gray-300 mb-2"></div>
                       <div className="mb-2">
@@ -781,12 +781,12 @@ export default function Settings() {
                           <span>₼25.00</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>ƏDV ({systemSettings.taxRate}%):</span>
-                          <span>₼{(25 * systemSettings.taxRate / 100).toFixed(2)}</span>
+                          <span>ƏDV ({Number(storeSettings?.taxRate) || 18}%):</span>
+                          <span>₼{(25 * (Number(storeSettings?.taxRate) || 18) / 100).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between font-bold">
                           <span>Ümumi:</span>
-                          <span>₼{(25 + 25 * systemSettings.taxRate / 100).toFixed(2)}</span>
+                          <span>₼{(25 + 25 * (Number(storeSettings?.taxRate) || 18) / 100).toFixed(2)}</span>
                         </div>
                       </div>
                       <div className="text-center mt-4">
@@ -811,11 +811,8 @@ export default function Settings() {
                         <p className="text-sm text-gray-500">Gündəlik avtomatik yedəkləmə</p>
                       </div>
                       <Switch
-                        checked={systemSettings.autoBackup}
-                        onCheckedChange={(checked) => setSystemSettings(prev => ({
-                          ...prev,
-                          autoBackup: checked
-                        }))}
+                        checked={storeSettings?.autoBackup || true}
+                        onCheckedChange={(checked) => handleStoreSettingsSubmit({ autoBackup: checked })}
                       />
                     </div>
                     <div>
