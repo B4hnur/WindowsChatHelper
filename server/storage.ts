@@ -1,11 +1,12 @@
 import { 
   users, customers, suppliers, categories, products, sales, saleItems, 
-  purchases, purchaseItems, creditPayments,
+  purchases, purchaseItems, creditPayments, storeSettings,
   type User, type InsertUser, type Customer, type InsertCustomer,
   type Supplier, type InsertSupplier, type Category, type InsertCategory,
   type Product, type InsertProduct, type Sale, type InsertSale,
   type SaleItem, type InsertSaleItem, type Purchase, type InsertPurchase,
-  type PurchaseItem, type InsertPurchaseItem, type CreditPayment, type InsertCreditPayment
+  type PurchaseItem, type InsertPurchaseItem, type CreditPayment, type InsertCreditPayment,
+  type StoreSettings, type InsertStoreSettings
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sum, count, sql, and, gte, lte, like, or } from "drizzle-orm";
@@ -76,6 +77,10 @@ export interface IStorage {
   
   // Dashboard
   getDashboardStats(): Promise<any>;
+  
+  // Store Settings
+  getStoreSettings(): Promise<StoreSettings | undefined>;
+  updateStoreSettings(settings: Partial<InsertStoreSettings>): Promise<StoreSettings | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {

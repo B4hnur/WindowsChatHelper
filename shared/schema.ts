@@ -14,6 +14,24 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Store settings table
+export const storeSettings = pgTable("store_settings", {
+  id: serial("id").primaryKey(),
+  storeName: text("store_name").notNull().default("Mağaza İdarəetmə Sistemi"),
+  storeAddress: text("store_address").default(""),
+  storePhone: text("store_phone").default(""),
+  storeVoen: text("store_voen").default(""),
+  currency: text("currency").notNull().default("AZN"),
+  taxRate: decimal("tax_rate", { precision: 5, scale: 2 }).default("18.00"),
+  receiptTemplate: text("receipt_template").default("standard"),
+  lowStockThreshold: integer("low_stock_threshold").default(5),
+  notifications: boolean("notifications").default(true),
+  autoBackup: boolean("auto_backup").default(true),
+  theme: text("theme").default("light"),
+  language: text("language").default("az"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Categories table
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
@@ -228,6 +246,7 @@ export const insertSaleItemSchema = createInsertSchema(saleItems).omit({ id: tru
 export const insertPurchaseSchema = createInsertSchema(purchases).omit({ id: true, createdAt: true });
 export const insertPurchaseItemSchema = createInsertSchema(purchaseItems).omit({ id: true });
 export const insertCreditPaymentSchema = createInsertSchema(creditPayments).omit({ id: true, paymentDate: true });
+export const insertStoreSettingsSchema = createInsertSchema(storeSettings).omit({ id: true, updatedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -250,3 +269,5 @@ export type PurchaseItem = typeof purchaseItems.$inferSelect;
 export type InsertPurchaseItem = z.infer<typeof insertPurchaseItemSchema>;
 export type CreditPayment = typeof creditPayments.$inferSelect;
 export type InsertCreditPayment = z.infer<typeof insertCreditPaymentSchema>;
+export type StoreSettings = typeof storeSettings.$inferSelect;
+export type InsertStoreSettings = z.infer<typeof insertStoreSettingsSchema>;
