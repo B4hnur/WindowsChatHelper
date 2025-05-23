@@ -141,9 +141,10 @@ export default function Inventory() {
     }
   };
 
-  const filteredProducts = products?.filter((product: any) => {
+  const filteredProducts = products?.filter((item: any) => {
+    const product = item.products || item; // Handle nested structure
     const matchesSearch = !searchQuery || 
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.barcode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.brand?.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -321,7 +322,7 @@ export default function Inventory() {
                   <div>
                     <div className="text-sm font-medium text-gray-500">Ümumi Məhsul</div>
                     <div className="text-lg font-medium text-gray-900">
-                      {dashboardStats?.totalProducts || 0}
+                      {products?.length || 0}
                     </div>
                   </div>
                 </div>
@@ -335,7 +336,10 @@ export default function Inventory() {
                   <div>
                     <div className="text-sm font-medium text-gray-500">Aşağı Stok</div>
                     <div className="text-lg font-medium text-gray-900">
-                      {dashboardStats?.lowStockCount || 0}
+                      {products?.filter((item: any) => {
+                        const product = item.products || item;
+                        return product.stock <= (product.minStock || 5);
+                      }).length || 0}
                     </div>
                   </div>
                 </div>
@@ -448,7 +452,8 @@ export default function Inventory() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {paginatedProducts.map((product: any) => {
+                  {paginatedProducts.map((item: any) => {
+                    const product = item.products || item; // Handle nested structure
                     const stockStatus = getStockStatus(product.stock, product.minStock);
                     return (
                       <tr key={product.id}>
@@ -458,8 +463,8 @@ export default function Inventory() {
                               <Package className="h-5 w-5 text-gray-400" />
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                              <div className="text-sm text-gray-500">{product.brand}</div>
+                              <div className="text-sm font-medium text-gray-900">{product.name || "-"}</div>
+                              <div className="text-sm text-gray-500">{product.brand || "-"}</div>
                             </div>
                           </div>
                         </td>
@@ -472,14 +477,14 @@ export default function Inventory() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge variant={stockStatus.variant} className="flex items-center w-fit">
                             <stockStatus.icon className="h-3 w-3 mr-1" />
-                            {product.stock} ədəd
+                            {product.stock || 0} ədəd
                           </Badge>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          ₼{product.costPrice}
+                          ₼{product.costPrice || "0.00"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          ₼{product.sellPrice}
+                          ₼{product.sellPrice || "0.00"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex space-x-2">
