@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -264,9 +264,19 @@ export default function Settings() {
     }
   };
 
-  const handleStoreSettingsSubmit = (data: any) => {
-    updateStoreSettingsMutation.mutate(data);
-  };
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleStoreSettingsSubmit = useCallback((data: any) => {
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Set new timeout to debounce API calls
+    timeoutRef.current = setTimeout(() => {
+      updateStoreSettingsMutation.mutate(data);
+    }, 1000); // Wait 1 second before saving
+  }, [updateStoreSettingsMutation]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
