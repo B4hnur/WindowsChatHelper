@@ -37,14 +37,24 @@ export default function Sales() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [barcodeInput, setBarcodeInput] = useState("");
+  const [productSearch, setProductSearch] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
   const [paymentType, setPaymentType] = useState<"cash" | "credit" | "installment">("cash");
   const [discount, setDiscount] = useState<number>(0);
   const [showScanner, setShowScanner] = useState(false);
   const [completedSale, setCompletedSale] = useState<any>(null);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
 
   const { data: customers } = useQuery({
     queryKey: ["/api/customers"],
+  });
+
+  const { data: categories } = useQuery({
+    queryKey: ["/api/categories"],
+  });
+
+  const { data: storeSettings } = useQuery({
+    queryKey: ["/api/store-settings"],
   });
 
   const { data: products } = useQuery({
@@ -239,6 +249,52 @@ export default function Sales() {
                       </Button>
                     </div>
                   </div>
+
+                  {/* Product Search */}
+                  <div>
+                    <Label>Məhsul Axtarışı</Label>
+                    <Input
+                      placeholder="Məhsul adı və ya kateqoriya ilə axtarın..."
+                      value={productSearch}
+                      onChange={(e) => setProductSearch(e.target.value)}
+                      className="mt-2"
+                    />
+                  </div>
+
+                  {/* Product List */}
+                  {productSearch && (
+                    <div className="max-h-40 overflow-y-auto border rounded-lg p-2 space-y-2">
+                      {products?.filter((item: any) => {
+                        const product = item.products || item;
+                        const categoryName = categories?.find((c: any) => c.id === product.categoryId)?.name || "";
+                        return product.name?.toLowerCase().includes(productSearch.toLowerCase()) ||
+                               categoryName.toLowerCase().includes(productSearch.toLowerCase()) ||
+                               product.barcode?.toLowerCase().includes(productSearch.toLowerCase());
+                      }).map((item: any) => {
+                        const product = item.products || item;
+                        const categoryName = categories?.find((c: any) => c.id === product.categoryId)?.name || "";
+                        return (
+                          <div
+                            key={product.id}
+                            className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                            onClick={() => {
+                              addToCart(product);
+                              setProductSearch("");
+                            }}
+                          >
+                            <div>
+                              <div className="font-medium text-sm">{product.name}</div>
+                              <div className="text-xs text-gray-500">{categoryName} • {product.barcode}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium text-sm">₼{product.sellPrice}</div>
+                              <div className="text-xs text-gray-500">{product.stock} ədəd</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   {/* Cart Items */}
                   <div className="space-y-3">

@@ -13,9 +13,11 @@ import {
 interface ReceiptPrinterProps {
   sale: any;
   items?: any[];
+  storeSettings?: any;
+  user?: any;
 }
 
-export function ReceiptPrinter({ sale, items = [] }: ReceiptPrinterProps) {
+export function ReceiptPrinter({ sale, items = [], storeSettings, user }: ReceiptPrinterProps) {
   const { toast } = useToast();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
@@ -118,11 +120,11 @@ export function ReceiptPrinter({ sale, items = [] }: ReceiptPrinterProps) {
     <div ref={receiptRef} className="receipt bg-white p-6 font-mono text-sm max-w-sm mx-auto">
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="text-lg font-bold mb-2">MAĞAZA İDARƏETMƏ SİSTEMİ</div>
+        <div className="text-lg font-bold mb-2">{storeSettings?.storeName || 'MAĞAZA İDARƏETMƏ SİSTEMİ'}</div>
         <div className="text-sm text-gray-600">
-          <div>Bakı şəhəri, Nəsimi rayonu</div>
-          <div>Telefon: +994 12 555 55 55</div>
-          <div>VÖEN: 1234567890</div>
+          <div>{storeSettings?.storeAddress || 'Bakı şəhəri, Nəsimi rayonu'}</div>
+          <div>Telefon: {storeSettings?.storePhone || '+994 12 555 55 55'}</div>
+          <div>VÖEN: {storeSettings?.storeTaxId || '1234567890'}</div>
         </div>
       </div>
 
