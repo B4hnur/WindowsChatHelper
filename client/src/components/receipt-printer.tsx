@@ -140,7 +140,11 @@ export function ReceiptPrinter({ sale, items = [], storeSettings, user }: Receip
         </div>
         <div className="flex justify-between mb-1">
           <span>Satıcı:</span>
-          <span>{sale.user?.fullName || 'Sistem'}</span>
+          <span>{user?.fullName || 'Sistem'}</span>
+        </div>
+        <div className="flex justify-between mb-1">
+          <span>Ödəniş:</span>
+          <span>{sale.paymentType === 'cash' ? 'Nəğd' : sale.paymentType === 'credit' ? 'Nisyə' : 'Kredit'}</span>
         </div>
         {sale.customer && (
           <div className="flex justify-between">

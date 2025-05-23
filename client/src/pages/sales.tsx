@@ -49,12 +49,12 @@ export default function Sales() {
     queryKey: ["/api/customers"],
   });
 
-  const { data: categories } = useQuery({
-    queryKey: ["/api/categories"],
-  });
-
   const { data: storeSettings } = useQuery({
     queryKey: ["/api/store-settings"],
+  });
+
+  const { data: categories } = useQuery({
+    queryKey: ["/api/categories"],
   });
 
   const { data: products } = useQuery({
@@ -440,7 +440,12 @@ export default function Sales() {
                     </Button>
                     
                     {completedSale && (
-                      <ReceiptPrinter sale={completedSale} />
+                      <ReceiptPrinter 
+                        sale={completedSale} 
+                        items={cart}
+                        storeSettings={storeSettings}
+                        user={user}
+                      />
                     )}
                   </div>
                 </CardContent>
