@@ -1,0 +1,138 @@
+🔧 Texniki Tələblər:
+Dil: Azərbaycan dili
+
+Platforma: Windows Forms App (.NET Framework) – C#
+
+Verilənlər Bazası: SQLite
+
+Əlavə qurğular: Barkod oxuyucu, XPrinter (çek printeri)
+
+📦 Əsas Modullar və Funksiyalar
+1. İstifadəçi Girişi və İdarəetməsi
+Rəhbər (admin) – bütün hüquqlar.
+
+Satıcı – yalnız satış, anbar baxışı və bəlkə də stok sorğuları.
+
+İstifadəçi yaratmaq, silmək, şifrə dəyişmək və s.
+
+Rol əsaslı hüquq təyinatı (lazım olduqda əlavə icazələr verilməsi).
+
+2. Mal Alışı
+Tədarükçünü seçərək mal alışı
+
+Barkod ilə mal əlavə etmə
+
+Malın sayı, qiyməti, alış tarixi, tədarükçü və digər məlumatlar
+
+Anbara avtomatik əlavə olunması
+
+3. Mal Satışı
+Barkod ilə mal seçimi
+
+Satış növü: Nəğd, Nisyə, Kreditlə
+
+Kreditlə: hissələrə bölmə, aylıq ödəniş hesablama
+
+Nisyə: Müştəriyə borc yazılması
+
+XPrinter ilə avtomatik çek çapı
+
+Sonradan çeki düzəltmək (yalnız rəhbərə açıq)
+
+Endirim təyini və ya xüsusi qiymətlə satış
+
+4. Müştərilər və Tədarükçülər
+Müştəri qeydiyyatı, borc balansı
+
+Tədarükçü qeydiyyatı, alqı-satqı tarixçəsi
+
+5. Nisyələr və Kreditlər
+Hər müştəriyə görə borc
+
+Kredit ödəniş cədvəli və tarixçəsi
+
+Xatırlatmalar (məsələn, vaxtı keçmiş ödənişlər)
+
+6. Hesabatlar
+Anbar qalığı (hansı maldan nə qədər var)
+
+Tədarükçüyə görə alınan mallar
+
+İstifadəçiyə görə satışlar
+
+Ümumi satış cədvəli
+
+Tarixə görə satış
+
+Satış performansı (gündəlik, aylıq, illik)
+
+Ən çox satılan məhsullar
+
+Stokda bitmək üzrə olan məhsullar
+
+Kredit və nisyə hesabatları
+
+7. Tənzimləmələr Bölməsi
+Çek formatını dəyişmək
+
+Valyuta təyini
+
+Tarix formatı
+
+Satış/alış parametrləri
+
+Barkod cihazı və printer ayarları
+
+💡 Əlavə Təkliflər
+🔐 Təhlükəsizlik və Giriş:
+Giriş zamanı parol maskalama və iki mərhələli təsdiq (sadə formada)
+
+Hərəkət qeydləri (log): hansı istifadəçi nə zaman nə etdi
+
+📊 Dashboard (Ana Səhifə Paneli):
+Bugünkü satış
+
+Anbar xəbərdarlıqları (məsələn, “filan məhsul bitmək üzrədir”)
+
+Qısa statistikalar (ən çox satan, ən çox alan müştəri və s.)
+
+📱 Gələcək üçün Hazırlıq:
+Mobil versiya və ya sadə API bağlantısı (əgər gələcəkdə mobil app və ya veb versiya istəsən)
+
+📦 Məhsul İdarəetməsi:
+Məhsul kateqoriyaları (məsələn, “Motor hissələri”, “Əyləc sistemi”)
+
+Mallara şəkil əlavə etmək
+
+Tək malın birdən çox barkodu ola bilər (əgər ehtiyac varsa)
+
+🧾 Çeklər:
+Qəbul / Qaytarma funksiyası (məsələn, müştəri malı qaytarırsa)
+
+Köhnə çekə baxış və çap
+
+📋 Nümunə Modul Strukturu
+r
+Kopyala
+Düzenle
+📁 Giriş
+📁 İdarə paneli
+    ├── İstifadəçilər
+    ├── Hüquqlar
+📁 Satış
+    ├── Nəğd
+    ├── Kreditlə
+    ├── Nisyə
+📁 Mal Alışı
+    ├── Yeni alış
+    ├── Alış tarixçəsi
+📁 Anbar
+    ├── Anbar qalığı
+    ├── Məhsul idarəsi
+📁 Müştərilər
+    ├── Borc siyahısı
+    ├── Kredit cədvəli
+📁 Tədarükçülər
+📁 Hesabatlar
+📁 Tənzimləmələr
+📁 Yardım
