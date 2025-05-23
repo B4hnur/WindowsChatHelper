@@ -309,7 +309,7 @@ export default function Sales() {
                         <SelectValue placeholder="Nəğd satış" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Nəğd satış</SelectItem>
+                        <SelectItem value="cash">Nəğd satış</SelectItem>
                         {customers?.map((customer: any) => (
                           <SelectItem key={customer.id} value={customer.id.toString()}>
                             {customer.name}

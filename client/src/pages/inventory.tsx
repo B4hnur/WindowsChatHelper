@@ -147,9 +147,9 @@ export default function Inventory() {
       product.barcode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.brand?.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = !categoryFilter || product.categoryId?.toString() === categoryFilter;
+    const matchesCategory = !categoryFilter || categoryFilter === "all" || product.categoryId?.toString() === categoryFilter;
     
-    const matchesStock = !stockFilter || 
+    const matchesStock = !stockFilter || stockFilter === "all" ||
       (stockFilter === "instock" && product.stock > product.minStock) ||
       (stockFilter === "lowstock" && product.stock <= product.minStock && product.stock > 0) ||
       (stockFilter === "outofstock" && product.stock === 0);
@@ -377,7 +377,7 @@ export default function Inventory() {
                       <SelectValue placeholder="Hamısı" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Hamısı</SelectItem>
+                      <SelectItem value="all">Hamısı</SelectItem>
                       {categories?.map((category: any) => (
                         <SelectItem key={category.id} value={category.id.toString()}>
                           {category.name}
@@ -393,7 +393,7 @@ export default function Inventory() {
                       <SelectValue placeholder="Hamısı" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Hamısı</SelectItem>
+                      <SelectItem value="all">Hamısı</SelectItem>
                       <SelectItem value="instock">Stokda var</SelectItem>
                       <SelectItem value="lowstock">Aşağı stok</SelectItem>
                       <SelectItem value="outofstock">Stokda yox</SelectItem>
