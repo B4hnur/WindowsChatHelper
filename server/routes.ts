@@ -307,6 +307,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(stats);
   });
 
+  // Store Settings
+  app.get("/api/store-settings", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const settings = await storage.getStoreSettings();
+    res.json(settings);
+  });
+
+  app.put("/api/store-settings", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const updatedSettings = await storage.updateStoreSettings(req.body);
+    res.json(updatedSettings);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

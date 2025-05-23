@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertUserSchema, insertCategorySchema } from "@shared/schema";
+import { insertUserSchema, insertCategorySchema, insertStoreSettingsSchema, type StoreSettings } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Settings as SettingsIcon, 
@@ -73,18 +73,30 @@ export default function Settings() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingCategory, setEditingCategory] = useState<any>(null);
-  const [systemSettings, setSystemSettings] = useState<SystemSettings>({
-    storeName: "Mağaza İdarəetmə Sistemi",
-    storeAddress: "",
-    storePhone: "",
-    currency: "AZN",
-    taxRate: 18,
-    receiptTemplate: "standard",
-    lowStockThreshold: 5,
-    notifications: true,
-    autoBackup: true,
-    theme: "light",
-    language: "az"
+  // Store Settings
+  const { data: storeSettings } = useQuery<StoreSettings>({
+    queryKey: ["/api/store-settings"]
+  });
+
+  const updateStoreSettingsMutation = useMutation({
+    mutationFn: async (settingsData: any) => {
+      const res = await apiRequest("PUT", "/api/store-settings", settingsData);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/store-settings"] });
+      toast({
+        title: "Uğurlu",
+        description: "Mağaza məlumatları yeniləndi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Xəta",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   // Redirect non-admin users
@@ -252,12 +264,8 @@ export default function Settings() {
     }
   };
 
-  const saveSystemSettings = () => {
-    // This would typically save to a settings API endpoint
-    toast({
-      title: "Tənzimləmələr yadda saxlanıldı",
-      description: "Sistem tənzimləmələri uğurla yeniləndi",
-    });
+  const handleStoreSettingsSubmit = (data: any) => {
+    updateStoreSettingsMutation.mutate(data);
   };
 
   return (
@@ -310,11 +318,8 @@ export default function Settings() {
                       <Label htmlFor="storeName">Mağaza Adı</Label>
                       <Input
                         id="storeName"
-                        value={systemSettings.storeName}
-                        onChange={(e) => setSystemSettings(prev => ({
-                          ...prev,
-                          storeName: e.target.value
-                        }))}
+                        value={storeSettings?.storeName || ""}
+                        onChange={(e) => handleStoreSettingsSubmit({ storeName: e.target.value })}
                         className="mt-1"
                       />
                     </div>
@@ -322,11 +327,8 @@ export default function Settings() {
                       <Label htmlFor="storeAddress">Ünvan</Label>
                       <Input
                         id="storeAddress"
-                        value={systemSettings.storeAddress}
-                        onChange={(e) => setSystemSettings(prev => ({
-                          ...prev,
-                          storeAddress: e.target.value
-                        }))}
+                        value={storeSettings?.storeAddress || ""}
+                        onChange={(e) => handleStoreSettingsSubmit({ storeAddress: e.target.value })}
                         className="mt-1"
                       />
                     </div>
@@ -334,12 +336,19 @@ export default function Settings() {
                       <Label htmlFor="storePhone">Telefon</Label>
                       <Input
                         id="storePhone"
-                        value={systemSettings.storePhone}
-                        onChange={(e) => setSystemSettings(prev => ({
-                          ...prev,
-                          storePhone: e.target.value
-                        }))}
+                        value={storeSettings?.storePhone || ""}
+                        onChange={(e) => handleStoreSettingsSubmit({ storePhone: e.target.value })}
                         className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="storeVoen">VÖEN</Label>
+                      <Input
+                        id="storeVoen"
+                        value={storeSettings?.storeVoen || ""}
+                        onChange={(e) => handleStoreSettingsSubmit({ storeVoen: e.target.value })}
+                        className="mt-1"
+                        placeholder="1234567890"
                       />
                     </div>
                   </CardContent>
@@ -352,8 +361,8 @@ export default function Settings() {
                   <CardContent className="space-y-4">
                     <div>
                       <Label htmlFor="currency">Valyuta</Label>
-                      <Select value={systemSettings.currency} onValueChange={(value) => 
-                        setSystemSettings(prev => ({ ...prev, currency: value }))
+                      <Select value={storeSettings?.currency || "AZN"} onValueChange={(value) => 
+                        handleStoreSettingsSubmit({ currency: value })
                       }>
                         <SelectTrigger className="mt-1">
                           <SelectValue />
@@ -370,11 +379,8 @@ export default function Settings() {
                       <Input
                         id="taxRate"
                         type="number"
-                        value={systemSettings.taxRate}
-                        onChange={(e) => setSystemSettings(prev => ({
-                          ...prev,
-                          taxRate: Number(e.target.value)
-                        }))}
+                        value={storeSettings?.taxRate || 18}
+                        onChange={(e) => handleStoreSettingsSubmit({ taxRate: e.target.value })}
                         className="mt-1"
                       />
                     </div>
@@ -383,11 +389,8 @@ export default function Settings() {
                       <Input
                         id="lowStockThreshold"
                         type="number"
-                        value={systemSettings.lowStockThreshold}
-                        onChange={(e) => setSystemSettings(prev => ({
-                          ...prev,
-                          lowStockThreshold: Number(e.target.value)
-                        }))}
+                        value={storeSettings?.lowStockThreshold || 5}
+                        onChange={(e) => handleStoreSettingsSubmit({ lowStockThreshold: Number(e.target.value) })}
                         className="mt-1"
                       />
                     </div>

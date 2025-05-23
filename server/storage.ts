@@ -428,6 +428,30 @@ export class DatabaseStorage implements IStorage {
       totalDebt: debtStats.totalDebt || "0.00",
     };
   }
+
+  async getStoreSettings(): Promise<StoreSettings | undefined> {
+    const [settings] = await db.select().from(storeSettings).limit(1);
+    return settings || undefined;
+  }
+
+  async updateStoreSettings(settings: Partial<InsertStoreSettings>): Promise<StoreSettings | undefined> {
+    const [existingSettings] = await db.select().from(storeSettings).limit(1);
+    
+    if (existingSettings) {
+      const [updated] = await db
+        .update(storeSettings)
+        .set({ ...settings, updatedAt: new Date() })
+        .where(eq(storeSettings.id, existingSettings.id))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db
+        .insert(storeSettings)
+        .values({ ...settings, updatedAt: new Date() })
+        .returning();
+      return created;
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();
